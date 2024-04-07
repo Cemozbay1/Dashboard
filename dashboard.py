@@ -166,13 +166,13 @@ def update_output_container(input_year, selected_statistics):
             figure=px.pie(exp_data,
             names='Vehicle_Type',
             values='Advertising_Expenditure',
-            title='Total Advertisement Expenditure by Vehicle Type in the year{}'.format(input_year)))
+            title='Total Advertisement Expenditure by Vehicle Type in the year {}'.format(input_year)))
 
 
 #TASK 2.6: Returning the graphs for displaying Yearly data
         return [
-                html.Div(className='chart-item', children=[html.Div(children=Y_chart1),html.Div(children=Y_chart2)], style={'display': 'flex'}),
-                html.Div(className='chart-item', children=[html.Div(children=Y_chart3),html.Div(children=Y_chart4)], style={'display': 'flex'})
+                html.Div(className='chart-item', children=[html.Div(children=Y_chart1),html.Div(children=Y_chart2)]),
+                html.Div(className='chart-item', children=[html.Div(children=Y_chart3),html.Div(children=Y_chart4)])
                 ]
         
     else:
