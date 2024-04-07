@@ -5,10 +5,10 @@
 
 
 import dash
+import more_itertools
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
-import more_itertools
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.express as px
@@ -35,20 +35,27 @@ year_list = [i for i in range(1980, 2024, 1)]
 app.layout = html.Div([
     #TASK 2.1 Add title to the dashboard
     html.H1("Automobile Sales Statistics Dashboard",
-    style={'textAlign': 'center', 'color': '#503D36','font-size': 24}),#May include style for title
+    style={'textAlign': 'center', 'color': '#503D36', 'font-size': 24}), #May include style for title
+
+    #TASK 2.2: Add two dropdown menus
     html.Div([#TASK 2.2: Add two dropdown menus
         html.Label("Select Statistics:"),
         dcc.Dropdown(
             id='dropdown-statistics',
-            options=dropdown_options,
+            options=[
+                {'label': 'Yearly Statistics', 'value': 'Yearly Statistics'},
+                {'label': 'Recession Period Statistics', 'value': 'Recession Period Statistics'}
+            ],
+            value='Select Statistics',
             placeholder='Select a report type',
-            value="Select Statistics",
-            style={'width': '80%',            # Set width to 80%
-            'padding': '3px',          # Set padding to 3px
-            'fontSize': '20px',        # Set font size to 20px
-            'textAlignLast': 'center'})
+            style={'width': '80%',
+            'padding': '3px',
+            'fontSize': '20px',
+            'textAlignLast': 'center'}
+        )
     ]),
-    html.Div(dcc.Dropdown(
+    html.Div([
+        dcc.Dropdown(
             id='select-year',
             options=[{'label': i, 'value': i} for i in year_list],
             value='Select Year',
@@ -56,9 +63,10 @@ app.layout = html.Div([
             'padding': '3px',
             'fontSize': '20px',
             'textAlignLast': 'center'}
-        )),
+        ),
     html.Div([#TASK 2.3: Add a division for output display
-    html.Div(id='output-container', className='chart-grid', style={'display':'flex'}),])
+    html.Div(id='output-container', className='chart-grid', style={'display': 'flex'}),])
+    ])
 ])
 #TASK 2.4: Creating Callbacks
 # Define the callback function to update the input container based on the selected statistics
@@ -75,7 +83,7 @@ def update_input_container(selected_statistics):
 #Callback for plotting
 # Define the callback function to update the input container based on the selected statistics
 @app.callback(
-    Output(component_id='output', component_property='children'),
+    Output(component_id='output-container', component_property='children'),
     [Input(component_id='select-year', component_property='value'), Input(component_id='dropdown-statistics', component_property='value')])
 
 
@@ -114,11 +122,12 @@ def update_output_container(selected_statistics, input_year):
             title="Total Expenditure Shared by Vehicle Type"))
 
 # Plot 4 bar chart for the effect of unemployment rate on vehicle type and sales
+        unemp = recession_data.groupby('Vehicle_Type', 'unemployment_rate')['Automobile_Sales'].mean().reset_index()
         R_chart4 = dcc.Graph(
-            figure=px.bar(recession_data,
+            figure=px.bar(unemp,
             x='unemployment_rate',
             y='Automobile_Sales',
-            hue='Vehicle_Type',
+            color='Vehicle_Type',
             title='Effect of Unemployment Rate on Vehicle Type and Sales'))
 
 
@@ -144,9 +153,9 @@ def update_output_container(selected_statistics, input_year):
             title="Yearly Automobile Sales"))
             
 # Plot 2 Total Monthly Automobile sales using line chart.
-        #mas= yearly_data.groupby("Month")['Automobile_Sales'].sum().reset_index()
+        mas= yearly_data.groupby("Month")['Automobile_Sales'].sum().reset_index()
         Y_chart2 = dcc.Graph(
-            figure=px.line(yearly_data,
+            figure=px.line(mas,
             x='Month',
             y='Automobile_Sales',
             title='Total Monthly Automobile Sales'))
