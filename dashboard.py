@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
 import dash
 import more_itertools
 from dash import dcc
@@ -62,7 +60,7 @@ app.layout = html.Div([
       html.Div(id='output-container', className='chart-grid', style={'display': 'flex'}),])
   ])
 
-#TASK 2.4: Creating Callbacks
+# Creating Callbacks
 # Define the callback function to update the input container based on the selected statistics
 @app.callback(
     Output(component_id='select-year', component_property='disabled'),
@@ -86,7 +84,7 @@ def update_output_container(input_year, selected_statistics):
         # Filter the data for recession periods
         recession_data = data[data['Recession'] == 1]
         
-#TASK 2.5: Create and display graphs for Recession Report Statistics
+# Create and display graphs for Recession Report Statistics
 
 #Plot 1 Automobile sales fluctuate over Recession Period (year wise)
         # use groupby to create relevant data for plotting
@@ -129,12 +127,12 @@ def update_output_container(input_year, selected_statistics):
             html.Div(className='chart-item', children=[html.Div(children=R_chart3),html.Div(children=R_chart4)])
             ]
 
-# TASK 2.6: Create and display graphs for Yearly Report Statistics
+# Create and display graphs for Yearly Report Statistics
  # Yearly Statistic Report Plots
     elif (input_year and selected_statistics=='Yearly Statistics') :
         yearly_data = data[data['Year'] == input_year]
                               
-#TASK 2.5: Creating Graphs Yearly data
+# Creating Graphs Yearly data
                               
 #plot 1 Yearly Automobile sales using line chart for the whole period.
         yas= data.groupby('Year')['Automobile_Sales'].mean().reset_index()
@@ -169,7 +167,7 @@ def update_output_container(input_year, selected_statistics):
             title='Total Advertisement Expenditure by Vehicle Type in the year {}'.format(input_year)))
 
 
-#TASK 2.6: Returning the graphs for displaying Yearly data
+# Returning the graphs for displaying Yearly data
         return [
                 html.Div(className='chart-item', children=[html.Div(children=Y_chart1),html.Div(children=Y_chart2)]),
                 html.Div(className='chart-item', children=[html.Div(children=Y_chart3),html.Div(children=Y_chart4)])
